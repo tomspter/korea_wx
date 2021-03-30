@@ -10,6 +10,7 @@
     "sequelize-automate": "sequelize-automate  -c sequelize-automate.config.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "debug": "^4.1.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
