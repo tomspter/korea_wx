@@ -22,60 +22,6 @@ module.exports = sequelize => {
       comment: null,
       field: "word"
     },
-    cixing: {
-      type: DataTypes.STRING(256),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "cixing"
-    },
-    word_sound: {
-      type: DataTypes.STRING(256),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "word_sound"
-    },
-    word_t: {
-      type: DataTypes.STRING(256),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "word_t"
-    },
-    sentence: {
-      type: DataTypes.STRING(256),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "sentence"
-    },
-    sentence_t: {
-      type: DataTypes.STRING(256),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "sentence_t"
-    },
-    sentence_sound: {
-      type: DataTypes.STRING(256),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "sentence_sound"
-    },
     word_book_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
