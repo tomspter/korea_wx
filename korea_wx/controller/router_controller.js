@@ -3,7 +3,8 @@ const sequelize = require('../utils/sequelize')
 const axios = require("axios");
 const {Op} = require("sequelize");
 const youdao = require("../utils/youdao")
-const wxUser = require('../models/wx_user')(sequelize, Sequelize);
+const naver = require("../utils/naver")
+// const wxUser = require('../models/wx_user')(sequelize, Sequelize);
 const article = require('../models/article')(sequelize, Sequelize);
 const carousel = require('../models/carousel')(sequelize, Sequelize);
 const wordBook = require('../models/word_book')(sequelize, Sequelize);
@@ -32,7 +33,7 @@ class RouterController {
     }
 
     /**
-     * 根据文章类型获取文章
+     * 根据文章类型获取文章(已废弃)
      * @param ctx
      * @returns {Promise<void>}
      */
@@ -45,12 +46,13 @@ class RouterController {
         })
         ctx.body = {
             code: 200,
-            msg: dbResult
+            msg: 'success',
+            data: dbResult
         }
     }
 
     /**
-     * 根据关键词获取文章
+     * 根据关键词获取文章(已废弃)
      * @param ctx
      * @returns {Promise<void>}
      */
@@ -62,7 +64,8 @@ class RouterController {
         })
         ctx.body = {
             code: 200,
-            msg: result
+            msg: 'success',
+            data: result
         }
     }
 
@@ -75,7 +78,8 @@ class RouterController {
         let dbResult = await carousel.findAll()
         ctx.body = {
             code: 200,
-            msg: dbResult
+            msg: 'success',
+            data: dbResult
         }
     }
 
@@ -88,7 +92,8 @@ class RouterController {
         let dbResult = await wordBook.findAll()
         ctx.body = {
             code: 200,
-            msg: dbResult
+            msg: 'success',
+            data: dbResult
         }
     }
 
@@ -98,7 +103,7 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async getWord(ctx) {
-        const {index, bookId} = {...ctx.request.body}
+        const {bookId, index} = {...ctx.request.body}
         let dbResult = await word.findAll({
             where: {
                 word_book_id: bookId
@@ -107,7 +112,8 @@ class RouterController {
         })
         ctx.body = {
             code: 200,
-            msg: await youdao(dbResult[index].word)
+            msg: 'success',
+            data: await youdao(dbResult[index].word)
         }
     }
 
@@ -117,10 +123,9 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async favoritesWord(ctx) {
-        const {workbookId, index} = {...ctx.request.body}
-        console.log(workbookId, index)
+        const {bookId, index} = {...ctx.request.body}
         await favorites.create({
-            word_book_id: workbookId,
+            word_book_id: bookId,
             word_id: index
         })
         ctx.body = {
@@ -149,8 +154,8 @@ class RouterController {
         const s = search.map(item => item.translation)
         ctx.body = {
             code: 200,
-            msg: dbResult.map((item, index) => Object.assign(item, item, {'translation': s[index]}))
-
+            msg: 'success',
+            data: dbResult.map((item, index) => Object.assign(item, item, {'translation': s[index]}))
         }
     }
 
@@ -180,10 +185,20 @@ class RouterController {
      */
     static async searchWord(ctx) {
         const {word} = {...ctx.request.body}
-        const message = await youdao.getYouDao(word)
+        const data = await youdao.getYouDao(word)
         ctx.body = {
             code: 200,
-            msg: message
+            msg: 'success',
+            data: data
+        }
+    }
+
+    static async getNaver(ctx) {
+        const result = await naver({...ctx.request.body})
+        ctx.body = {
+            code: 200,
+            msg: "success",
+            data: result.data
         }
     }
 }
