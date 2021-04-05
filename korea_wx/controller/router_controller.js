@@ -113,7 +113,7 @@ class RouterController {
         ctx.body = {
             code: 200,
             msg: 'success',
-            data: await youdao(dbResult[index].word)
+            data: await youdao.getYouDao(dbResult[index].word)
         }
     }
 
