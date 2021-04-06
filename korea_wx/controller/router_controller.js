@@ -110,9 +110,15 @@ class RouterController {
             },
             raw: true
         })
-        console.log(dbResult)
         let result = await youdao.getYouDao(dbResult[index].word)
         result.wordId = dbResult[index].id
+        const isFavorites = await favorites.findOne({
+            where: {
+                word_book_id: bookId,
+                word_id: dbResult[index].id
+            }
+        })
+        result.isCollect = isFavorites !== null
         ctx.body = {
             code: 200,
             msg: 'success',
