@@ -110,10 +110,13 @@ class RouterController {
             },
             raw: true
         })
+        console.log(dbResult)
+        let result = await youdao.getYouDao(dbResult[index].word)
+        result.wordId = dbResult[index].id
         ctx.body = {
             code: 200,
             msg: 'success',
-            data: await youdao.getYouDao(dbResult[index].word)
+            data: result
         }
     }
 
@@ -165,13 +168,15 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async delFavorites(ctx) {
-        const {wordID, workbookId} = {...ctx.request.body}
-        await favorites.destroy({
-            where: {
-                word_id: wordID,
-                word_book_id: workbookId
-            }
-        })
+        const {my_collect_id} = {...ctx.request.body}
+        for (const item of JSON.parse(my_collect_id)) {
+            await favorites.destroy({
+                where: {
+                    word_id: item.index,
+                    word_book_id: item.bookId
+                }
+            })
+        }
         ctx.body = {
             code: 200,
             msg: 'success'

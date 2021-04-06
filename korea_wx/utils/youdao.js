@@ -44,6 +44,7 @@ async function getYouDao(word) {
         }
     }
     return {
+        'word': searchResult.data["meta"]["input"],
         'pos': pos,
         'translation': wordTranslationList.join(','),
         'sentence': sentenceList,
