@@ -133,10 +133,25 @@ class RouterController {
      */
     static async favoritesWord(ctx) {
         const {bookId, index} = {...ctx.request.body}
-        await favorites.create({
-            word_book_id: bookId,
-            word_id: index
+        const exists = await favorites.findOne({
+            where: {
+                word_book_id: bookId,
+                word_id: index
+            }
         })
+        if (exists === null) {
+            await favorites.create({
+                word_book_id: bookId,
+                word_id: index
+            })
+        } else {
+            await favorites.destroy({
+                where: {
+                    word_book_id: bookId,
+                    word_id: index
+                }
+            })
+        }
         ctx.body = {
             code: 200,
             msg: 'success'
