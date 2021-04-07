@@ -168,23 +168,32 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async favoritesWord(ctx) {
-        const {bookId, index} = {...ctx.request.body}
+        const {bookId, index, openId} = {...ctx.request.body}
+        const getUserInfo = await wxUser.findOne({
+            where: {
+                open_id: openId
+            },
+            raw: true
+        })
         const exists = await favorites.findOne({
             where: {
                 word_book_id: bookId,
-                word_id: index
+                word_id: index,
+                user_id: getUserInfo['id']
             }
         })
         if (exists === null) {
             await favorites.create({
                 word_book_id: bookId,
-                word_id: index
+                word_id: index,
+                user_id: getUserInfo['id']
             })
         } else {
             await favorites.destroy({
                 where: {
                     word_book_id: bookId,
-                    word_id: index
+                    word_id: index,
+                    user_id: getUserInfo['id']
                 }
             })
         }
@@ -200,7 +209,19 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async showFavorites(ctx) {
-        const favoritesList = await favorites.findAll({attributes: ["word_id"], raw: true})
+        const {openId} = {...ctx.request.body}
+        const getUserInfo = await wxUser.findOne({
+            where: {
+                open_id: openId
+            },
+            raw: true
+        })
+        const favoritesList = await favorites.findAll({
+            attributes: ["word_id"],
+            where: {user_id: getUserInfo['id']},
+            raw: true
+        })
+        console.log(favoritesList)
         let ids = favoritesList.map(item => item.word_id)
         const dbResult = await word.findAll({
             where: {
@@ -225,12 +246,19 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async delFavorites(ctx) {
-        const {my_collect_id} = {...ctx.request.body}
+        const {my_collect_id, openId} = {...ctx.request.body}
+        const getUserInfo = await wxUser.findOne({
+            where: {
+                open_id: openId
+            },
+            raw: true
+        })
         for (const item of JSON.parse(my_collect_id)) {
             await favorites.destroy({
                 where: {
                     word_id: item.index,
-                    word_book_id: item.bookId
+                    word_book_id: item.bookId,
+                    user_id: getUserInfo['id']
                 }
             })
         }

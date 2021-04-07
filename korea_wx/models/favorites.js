@@ -38,6 +38,19 @@ module.exports = sequelize => {
         key: "id",
         model: "word_model"
       }
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "user_id",
+      references: {
+        key: "id",
+        model: "wx_user_model"
+      }
     }
   };
   const options = {
@@ -53,6 +66,11 @@ module.exports = sequelize => {
       unique: false,
       type: "BTREE",
       fields: ["word_id"]
+    }, {
+      name: "favorites_wx_user_id_fk",
+      unique: false,
+      type: "BTREE",
+      fields: ["user_id"]
     }]
   };
   const FavoritesModel = sequelize.define("favorites_model", attributes, options);
