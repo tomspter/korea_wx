@@ -37,11 +37,16 @@ class RouterController {
      */
     static async saveUser(ctx) {
         const {openid, nickname, headimgurl} = {...ctx.request.body}
-        await wxUser.create({
+        const isExist = wxUser.findOne({
             open_id: openid,
-            nick_name: nickname,
-            avatar_url: headimgurl
         })
+        if (isExist === null) {
+            await wxUser.create({
+                open_id: openid,
+                nick_name: nickname,
+                avatar_url: headimgurl
+            })
+        }
         ctx.body = {
             code: 200,
             msg: 'success',
@@ -147,7 +152,6 @@ class RouterController {
             },
             raw: true
         })
-        console.log(dbResult)
         let result = await youdao.getYouDao(dbResult['word'])
         result.wordId = dbResult['id']
         const isFavorites = await favorites.findOne({
