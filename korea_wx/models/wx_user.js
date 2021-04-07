@@ -21,6 +21,24 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "open_id"
+    },
+    nick_name: {
+      type: varbinary(256),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "nick_name"
+    },
+    avatar_url: {
+      type: varbinary(256),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "avatar_url"
     }
   };
   const options = {

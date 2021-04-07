@@ -4,7 +4,7 @@ const axios = require("axios");
 const {Op} = require("sequelize");
 const youdao = require("../utils/youdao")
 const naver = require("../utils/naver")
-// const wxUser = require('../models/wx_user')(sequelize, Sequelize);
+const wxUser = require('../models/wx_user')(sequelize, Sequelize);
 const article = require('../models/article')(sequelize, Sequelize);
 const carousel = require('../models/carousel')(sequelize, Sequelize);
 const wordBook = require('../models/word_book')(sequelize, Sequelize);
@@ -15,12 +15,11 @@ const favorites = require('../models/favorites')(sequelize, Sequelize);
 class RouterController {
 
     /**
-     * 获取用户(已废弃)
+     * 解析用户OpenId
      * @param ctx
      * @returns {Promise<void>}
      */
     static async addUser(ctx) {
-        // await wxUser.create(ctx.request.body)
         const code = ctx.request.body.code
         const wxResult = await axios.get(
             "https://api.weixin.qq.com/sns/jscode2session?appid=wxbf5c399c3ac3081c&secret=9cb813840353631bae4cd57370a4d280&js_code=" + code + "&grant_type=authorization_code"
@@ -28,6 +27,44 @@ class RouterController {
         ctx.body = {
             code: 200,
             msg: wxResult.data
+        }
+    }
+
+    /**
+     * 保存微信用户
+     * @param ctx
+     * @returns {Promise<void>}
+     */
+    static async saveUser(ctx) {
+        const {openid, nickname, headimgurl} = {...ctx.request.body}
+        await wxUser.create({
+            open_id: openid,
+            nick_name: nickname,
+            avatar_url: headimgurl
+        })
+        ctx.body = {
+            code: 200,
+            msg: 'success',
+        }
+    }
+
+    /**
+     * 获取用户信息
+     * @param ctx
+     * @returns {Promise<void>}
+     */
+    static async getUserInfo(ctx) {
+        const {openid} = {...ctx.request.body}
+        const dbResult = await wxUser.findOne({
+            where: {
+                open_id: openid
+            },
+            raw: true
+        })
+        ctx.body = {
+            code: 200,
+            msg: 'success',
+            data: dbResult
         }
     }
 
