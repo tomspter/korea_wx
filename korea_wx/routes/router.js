@@ -12,6 +12,8 @@ router.post('/showFavorites',RouterController.showFavorites)
 router.post('/delFavorites',RouterController.delFavorites)
 router.post('/searchWord',RouterController.searchWord)
 router.post('/getNaver',RouterController.getNaver)
+router.post('/saveUser',RouterController.saveUser)
+router.post('/getUserInfo',RouterController.getUserInfo)
 
 
 module.exports = router
