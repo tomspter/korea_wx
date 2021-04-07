@@ -25,7 +25,6 @@ class RouterController {
         const wxResult = await axios.get(
             "https://api.weixin.qq.com/sns/jscode2session?appid=wxbf5c399c3ac3081c&secret=9cb813840353631bae4cd57370a4d280&js_code=" + code + "&grant_type=authorization_code"
         )
-        console.log(wxResult.data)
         ctx.body = {
             code: 200,
             msg: wxResult.data
