@@ -144,23 +144,41 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async getWord(ctx) {
-        const {bookId, index} = {...ctx.request.body}
-        let dbResult = await word.findOne({
-            where: {
-                word_book_id: bookId,
-                id: index
-            },
-            raw: true
-        })
-        let result = await youdao.getYouDao(dbResult['word'])
-        result.wordId = dbResult['id']
-        const isFavorites = await favorites.findOne({
-            where: {
-                word_book_id: bookId,
-                word_id: dbResult['id']
-            }
-        })
-        result.isCollect = isFavorites !== null
+        const {bookId, index, wordId} = {...ctx.request.body}
+        let result
+        if (parseInt(wordId) !== 0) {
+            const dbWord = await word.findOne({
+                where: {
+                    id: wordId
+                },
+                raw: true
+            })
+            result = await youdao.getYouDao(dbWord.word)
+            result.wordId = dbWord.id
+            const isFavorites = await favorites.findOne({
+                where: {
+                    word_book_id: bookId,
+                    word_id: dbWord.id
+                }
+            })
+            result.isCollect = isFavorites !== null
+        } else {
+            let dbResult = await word.findAll({
+                where: {
+                    word_book_id: bookId,
+                },
+                raw: true
+            })
+            result = await youdao.getYouDao(dbResult[index].word)
+            result.wordId = dbResult[index].id
+            const isFavorites = await favorites.findOne({
+                where: {
+                    word_book_id: bookId,
+                    word_id: dbResult[index].id
+                }
+            })
+            result.isCollect = isFavorites !== null
+        }
         ctx.body = {
             code: 200,
             msg: 'success',
