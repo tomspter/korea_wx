@@ -140,18 +140,20 @@ class RouterController {
      */
     static async getWord(ctx) {
         const {bookId, index} = {...ctx.request.body}
-        let dbResult = await word.findAll({
+        let dbResult = await word.findOne({
             where: {
-                word_book_id: bookId
+                word_book_id: bookId,
+                id: index
             },
             raw: true
         })
-        let result = await youdao.getYouDao(dbResult[index].word)
-        result.wordId = dbResult[index].id
+        console.log(dbResult)
+        let result = await youdao.getYouDao(dbResult['word'])
+        result.wordId = dbResult['id']
         const isFavorites = await favorites.findOne({
             where: {
                 word_book_id: bookId,
-                word_id: dbResult[index].id
+                word_id: dbResult['id']
             }
         })
         result.isCollect = isFavorites !== null
