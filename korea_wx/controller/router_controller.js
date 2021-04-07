@@ -23,7 +23,7 @@ class RouterController {
         // await wxUser.create(ctx.request.body)
         const code = ctx.request.body.code
         const wxResult = await axios.get(
-            "https://api.weixin.qq.com/sns/jscode2session?appid=wxb386eaca9554d001&secret=6fc4e6cda38fbb057f29b84198fd84db&js_code=" + code + "&grant_type=authorization_code"
+            "https://api.weixin.qq.com/sns/jscode2session?appid=wxbf5c399c3ac3081c&secret=9cb813840353631bae4cd57370a4d280&js_code=" + code + "&grant_type=authorization_code"
         )
         console.log(wxResult.data)
         ctx.body = {
