@@ -23,7 +23,7 @@ module.exports = sequelize => {
       field: "open_id"
     },
     nick_name: {
-      type: varbinary(256),
+      type: DataTypes.STRING(256),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -32,7 +32,7 @@ module.exports = sequelize => {
       field: "nick_name"
     },
     avatar_url: {
-      type: varbinary(256),
+      type: DataTypes.STRING(256),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
