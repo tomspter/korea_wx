@@ -315,11 +315,20 @@ class RouterController {
     static async searchWord(ctx) {
         const {word} = {...ctx.request.body}
         const data = await youdao.getYouDao(word)
-        ctx.body = {
-            code: 200,
-            msg: 'success',
-            data: data
+        if (typeof data === 'string') {
+            ctx.body = {
+                code: 304,
+                msg: 'success',
+                data: data
+            }
+        }else {
+            ctx.body = {
+                code: 200,
+                msg: 'success',
+                data: data
+            }
         }
+
     }
 
     static async getNaver(ctx) {
