@@ -208,24 +208,30 @@ class RouterController {
             },
             raw: true
         })
+        let dbResult = await word.findAll({
+            where: {
+                word_book_id: bookId,
+            },
+            raw: true
+        })
         const exists = await favorites.findOne({
             where: {
                 word_book_id: bookId,
-                word_id: index,
+                word_id: dbResult[index].id,
                 user_id: getUserInfo['id']
             }
         })
         if (exists === null) {
             await favorites.create({
                 word_book_id: bookId,
-                word_id: index,
+                word_id: dbResult[index].id,
                 user_id: getUserInfo['id']
             })
         } else {
             await favorites.destroy({
                 where: {
                     word_book_id: bookId,
-                    word_id: index,
+                    word_id: dbResult[index].id,
                     user_id: getUserInfo['id']
                 }
             })
