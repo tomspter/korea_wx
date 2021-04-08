@@ -144,8 +144,9 @@ class RouterController {
      * @returns {Promise<void>}
      */
     static async getWord(ctx) {
-        const {bookId, index, wordId} = {...ctx.request.body}
+        const {bookId, index, wordId,openId} = {...ctx.request.body}
         let result
+        //从收藏夹进入
         if (parseInt(wordId) !== 0) {
             const dbWord = await word.findOne({
                 where: {
@@ -162,6 +163,7 @@ class RouterController {
                 }
             })
             result.isCollect = isFavorites !== null
+            //从单词书进入
         } else {
             let dbResult = await word.findAll({
                 where: {
@@ -171,10 +173,17 @@ class RouterController {
             })
             result = await youdao.getYouDao(dbResult[index].word)
             result.wordId = dbResult[index].id
+            const getUserInfo = await wxUser.findOne({
+                where: {
+                    open_id: openId
+                },
+                raw: true
+            })
             const isFavorites = await favorites.findOne({
                 where: {
                     word_book_id: bookId,
-                    word_id: dbResult[index].id
+                    word_id: dbResult[index].id,
+                    user_id: getUserInfo.id
                 }
             })
             result.isCollect = isFavorites !== null
