@@ -74,43 +74,6 @@ class RouterController {
     }
 
     /**
-     * 根据文章类型获取文章(已废弃)
-     * @param ctx
-     * @returns {Promise<void>}
-     */
-    static async getArticleByType(ctx) {
-        const {type} = {...ctx.request.body}
-        let dbResult = await article.findAll({
-            where: {
-                type: type
-            }
-        })
-        ctx.body = {
-            code: 200,
-            msg: 'success',
-            data: dbResult
-        }
-    }
-
-    /**
-     * 根据关键词获取文章(已废弃)
-     * @param ctx
-     * @returns {Promise<void>}
-     */
-    static async getArticleByKeyWord(ctx) {
-        const {keyword} = {...ctx.request.body}
-        let dbResult = await article.findAll({raw: true})
-        let result = dbResult.filter(item => {
-            return item.main_text.includes(keyword)
-        })
-        ctx.body = {
-            code: 200,
-            msg: 'success',
-            data: result
-        }
-    }
-
-    /**
      * 获取横划图片URL
      * @param ctx
      * @returns {Promise<void>}
